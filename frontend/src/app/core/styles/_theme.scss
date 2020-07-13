@@ -1,0 +1,66 @@
+// PALETTE
+$cool_gray: #efefef;
+$primary_medondo: #bb1a7d;
+
+$green: #00e36a;
+$red: tomato;
+
+// SIZES
+$border_size: 1px;
+$border_style: dashed;
+$border_color: $cool_gray;
+
+$border: $border_size $border_style $border_color;
+
+:root {
+  --primary: $primary_medondo;
+  --accent-gray: $cool_gray;
+}
+
+.border-right {
+  border-right: $border_size $border_style $border-color;
+}
+
+.border-top {
+  border-top: $border_size $border_style $border-color;
+}
+
+.border-bottom {
+  border-bottom: $border_size $border_style $border-color;
+}
+
+.border {
+  border: $border_size $border_style $border-color;
+}
+
+.border-x {
+  border-left: $border_size $border_style $border-color;
+  border-right: $border_size $border_style $border-color;
+}
+
+.border-y {
+  border-top: $border_size $border_style $border-color;
+  border-bottom: $border_size $border_style $border-color;
+}
+
+.text-gray {
+  color: $primary_medondo;
+}
+
+.text-medondo {
+  color: $primary_medondo;
+}
+
+.hover-gray {
+  &:hover {
+    background-color: $cool_gray;
+  }
+}
+
+.online {
+  color: $green;
+}
+
+.offline {
+  color: $red;
+}

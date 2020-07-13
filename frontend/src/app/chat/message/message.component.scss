@@ -1,0 +1,14 @@
+@import "../../core/styles/_theme";
+
+.message {
+  padding: 10px 20px;
+}
+
+.message:hover {
+  background-color: $cool_gray;
+}
+
+.special-message {
+  color: $primary_medondo;
+  padding: 20px;
+}

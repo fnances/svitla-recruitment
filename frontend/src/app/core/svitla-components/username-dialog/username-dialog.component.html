@@ -1,0 +1,32 @@
+<h1 mat-dialog-title>Name yourself</h1>
+<div>
+  <div mat-dialog-content class="flex">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput [formControl]="username" />
+    </mat-form-field>
+
+    <p *ngIf="username.hasError('taken')">
+      This username already exists. Please choose another name.
+    </p>
+
+    <p *ngIf="username.hasError('generalError')">
+      Oops! This is our fault. Please try again later.
+    </p>
+  </div>
+
+  <mat-dialog-actions *ngIf="!data.user">
+    <button mat-button (click)="confirm()" class="ml-auto">
+      OK
+    </button>
+  </mat-dialog-actions>
+
+  <mat-dialog-actions *ngIf="data.user">
+    <button mat-button color="warn" (click)="close()" class="ml-auto">
+      Close
+    </button>
+    <button mat-button (click)="edit()" class="ml-auto">
+      Update
+    </button>
+  </mat-dialog-actions>
+</div>

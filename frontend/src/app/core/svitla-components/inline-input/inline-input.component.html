@@ -1,0 +1,18 @@
+<mat-form-field class="w-full" [formControl]="phrase">
+  <input
+    matInput
+    (change)="phrase.valid && search.emit(phrase.value)"
+    (keyup.enter)="enter.emit(phrase.value)"
+    [placeholder]="placeholder"
+    [formControl]="phrase"
+  />
+  <button mat-icon-button matSuffix color="primary" *ngIf="icon">
+    <mat-icon>{{ icon }}</mat-icon>
+  </button>
+
+  <mat-autocomplete #auto="matAutocomplete" *ngIf="suggestions.length > 0">
+    <mat-option *ngFor="let suggestion of suggestions" [value]="suggestion">
+      {{ suggestion }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

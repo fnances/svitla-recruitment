@@ -1,0 +1,87 @@
+<aside class="sidebar-container border-right">
+  <div class="sidebar-categories__container">
+    <div class="sidebar-category border-bottom">
+      <span
+        [matBadge]="users.length"
+        matBadgeOverlap="false"
+        class="sidebar-category__label"
+      >
+        Users
+      </span>
+
+      <app-inline-input icon="search" [suggestions]="users"> </app-inline-input>
+    </div>
+
+    <div class="list w-full mt-3">
+      <p
+        *ngFor="let user of users"
+        class="p-3 hover-gray"
+        (click)="selectUser(user)"
+      >
+        <mat-icon
+          [style.fontSize.px]="10"
+          [ngClass]="{
+            online: user.isOnline,
+            offline: !user.isOnline
+          }"
+        >
+          circle
+        </mat-icon>
+        {{ user.username }}
+      </p>
+    </div>
+
+    <div
+      class="sidebar-category border-bottom flex align-center justify-between"
+    >
+      <span class="sidebar-category__label">
+        Channels
+      </span>
+
+      <app-inline-input icon="add" (enter)="addChannel($event)">
+      </app-inline-input>
+    </div>
+
+    <div class="list w-full">
+      <p
+        *ngFor="let channel of channels"
+        class="p-5 hover-gray mt-5"
+        (click)="selectChannel(channel)"
+      >
+        <span
+          [matBadge]="channel.messages.length"
+          matBadgeOverlap="false"
+          matBadgeColor="warn"
+        >
+          <span class="text-medondo">
+            #
+          </span>
+          {{ channel.name }}
+        </span>
+      </p>
+    </div>
+
+    <div
+      class="sidebar-category border-bottom flex align-center justify-between"
+    >
+      <span class="sidebar-category__label">
+        Direct Messages
+      </span>
+
+      <app-inline-input
+        icon="send"
+        (enter)="addDirect($event)"
+        [suggestions]="users"
+      >
+      </app-inline-input>
+    </div>
+
+    <div class="list w-full">
+      <p *ngFor="let direct of directs" class="p-3">
+        <span matBadge="37" matBadgeOverlap="false" matBadgeColor="warn">
+          {{ direct.name }}
+        </span>
+      </p>
+    </div>
+  </div>
+</aside>

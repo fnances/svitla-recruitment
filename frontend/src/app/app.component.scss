@@ -1,0 +1,22 @@
+.app-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+}
+
+.logo {
+  position: relative;
+  img {
+    margin-left: 50px;
+  }
+}
+
+.logo-text {
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+}

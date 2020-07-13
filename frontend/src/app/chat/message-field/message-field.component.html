@@ -1,0 +1,28 @@
+<div class="message border-top">
+  <div class="message-field">
+    <quill-editor
+      [styles]="editorStyles"
+      [modules]="config"
+      [sanitize]="true"
+      [maxLength]="140"
+      [formControl]="message"
+      [trimOnValidation]="true"
+      [placeholder]="messageTo"
+      (onEditorCreated)="bindEditor($event)"
+    >
+    </quill-editor>
+    <small class="counter"> {{ count }} / 140 </small>
+  </div>
+
+  <button
+    mat-raised-button
+    class="send-btn"
+    color="primary"
+    (click)="send()"
+    [disabled]="message.invalid"
+  >
+    Send
+    <hr />
+    <mat-icon class="w-full">send</mat-icon>
+  </button>
+</div>

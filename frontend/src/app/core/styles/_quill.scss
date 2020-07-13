@@ -1,0 +1,27 @@
+@import "./_theme.scss";
+
+$border_size: 2px;
+$border_style: solid;
+
+.message-field {
+  .ql-toolbar {
+    border-top: none !important;
+    border-left: none !important;
+    border-right: $border_size $border_style $border_color !important;
+    border-bottom: $border_size $border_style $border_color !important;
+  }
+  .ql-container.ql-snow {
+    font-size: 15px;
+    border-radius: 0px 0px 4px 4px;
+    border-top: none !important;
+    border-left: none !important;
+    border-bottom: $border_size $border_style $border_color !important;
+    border-right: $border_size $border_style $border_color !important;
+  }
+
+  .ql-container.ql-snow:focus {
+    border-color: $primary_medondo;
+    border-bottom: $border_size $border_style $primary_medondo !important;
+    border-right: $border_size $border_style $primary_medondo !important;
+  }
+}

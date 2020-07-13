@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="chat-sidebar">
+    <app-sidebar> </app-sidebar>
+  </div>
+
+  <div class="chat">
+    <div class="messages">
+      <router-outlet> </router-outlet>
+    </div>
+
+    <app-message-field
+      class="message-field"
+      [mention]="mention$ | async"
+      (sendMessage)="sendMessage($event)"
+    >
+    </app-message-field>
+  </div>
+</div>
