@@ -18,6 +18,7 @@ export class Websockets {
   users = 0;
   events = [];
   middlewares = [];
+  socketMiddlewares = [];
   listeners: WsListeners = {};
 
   constructor(private server: Server) {
@@ -45,8 +46,8 @@ export class Websockets {
         this.users -= 1;
         console.log("Client disconnected");
 
-        this.listeners["DISCONNECT"].forEach((listener) => {
-          listener(socket, undefined);
+        this.listeners[Event.DISCONNECTED].forEach((listener) => {
+          listener(socket);
         });
       });
 
@@ -73,6 +74,13 @@ export class Websockets {
 
   broadcast(event: string, payload: any) {
     this.io.sockets.emit(event, payload);
+  }
+
+  registerMiddlewares(middlewares) {
+    this.middlewares = middlewares;
+    this.middlewares.forEach((middleware) => {
+      this.io.use(middleware);
+    });
   }
 }
 

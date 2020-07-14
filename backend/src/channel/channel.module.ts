@@ -25,21 +25,27 @@ export class ChannelModule {
   }
 
   connected = (socket: AuthenticatedSocket, id: string) => {
-    if (socket.user) {
-      const channels = this.channels.getAll();
+    const channels = this.channels.getAll();
 
+    if (socket.user) {
       channels.forEach((channel: Channel) => {
         socket.join(channel.id);
       });
     }
+
+    this.ws.broadcast(Event.CHANNELS, channels);
   };
 
-  sendMessage = (socket: AuthenticatedSocket, { channel, message }) => {
+  sendMessage = (socket: AuthenticatedSocket, { channel, message, user }) => {
+    if (!socket.user) {
+      socket.user = user;
+    }
+
     const exists = this.channels.get(channel);
 
     const msg: Message = {
       createdAt: new Date(),
-      username: socket.user.username,
+      username: user.username,
       body: message,
     };
 
@@ -52,23 +58,36 @@ export class ChannelModule {
     this.ws.broadcast(Event.CHANNELS, allChannels);
   };
 
-  createChannel = (socket: AuthenticatedSocket, { channelName }) => {
+  createChannel = (socket: AuthenticatedSocket, { channelName, user }) => {
     if (this.channels.exists(channelName)) {
       return socket.emit(Event.ADD_CHANNEL, { code: HttpStatusCodes.CONFLICT });
     }
+
+    if (!socket.user) {
+      socket.user = user;
+    }
+
+    const createdAt = new Date();
+
+    const firstMessage: Message = {
+      system: true,
+      createdAt,
+      username: user.username,
+      body: `Channel ${channelName} created`,
+    };
 
     const channel = {
       id: channelName,
       name: channelName,
       createdAt: new Date(),
-      createdBy: socket.user,
-      messages: ["channel created"],
-      users: [socket.user],
+      createdBy: user.username,
+      messages: [firstMessage],
+      users: [user],
     };
 
     try {
       this.channels.create(channelName, channel);
-      socket.join(channelName);
+      socket.join(channel.id);
       this.ws.broadcast(Event.CHANNELS, this.channels.getAll());
     } catch (e) {
       return socket.emit(Event.CHANNELS, {
@@ -88,7 +107,7 @@ export class ChannelModule {
 
     try {
       const updated = this.channels.update(channelName, { ...channel, users });
-      socket.join(channelName);
+      socket.join(channel.id);
       this.ws.broadcast(Event.CHANNELS, updated);
     } catch (e) {
       return socket.emit(Event.CHANNELS, { code: HttpStatusCodes.CONFLICT });

@@ -2,7 +2,7 @@ import { FakeDatabase } from "../providers/fake-database";
 import { Socket } from "socket.io";
 import { NextFunction } from "express";
 
-import { User, Channel } from "@shared-interfaces";
+import { User, Channel, Event, HttpStatusCodes } from "@shared-interfaces";
 
 export interface AuthenticatedSocket extends Socket {
   user: User;
@@ -10,24 +10,35 @@ export interface AuthenticatedSocket extends Socket {
 }
 
 export const authenticatedSocket = (users: FakeDatabase<User>) => (
-  socket: Socket,
+  socket: AuthenticatedSocket,
   next: NextFunction
 ) => {
   const auth = socket.request?.cookies?.user;
 
   if (auth) {
-    const parsed = JSON.parse(auth);
-    const user = users.get(parsed.id);
+    let user: User;
 
-    if (!user) {
-      // PSEUDO AUTH REVOKING
-      socket.request.cookies = null;
-      (socket as AuthenticatedSocket).user = null;
-      socket.emit("AUTH", { code: 404 });
+    try {
+      user = JSON.parse(auth);
+    } catch (e) {
+      console.log("Malformed cookies.");
+      socket.request.cookies.user = null;
+      socket.user = null;
+      socket.emit(Event.AUTH, { code: HttpStatusCodes.UNAUTHORIZED });
       return next();
     }
 
-    (socket as AuthenticatedSocket).user = user;
+    const exists = users.get(user.id);
+
+    if (!exists) {
+      /* USING COOKIES AS A SOURCE OF TRUTH IN CASE OF SERVER FAILURE AND DATA LOSS
+       */
+      users.create(user.id, user);
+      socket.emit(Event.AUTH, { user });
+    }
+
+    socket.request.cookies.user = exists || user;
+    socket.user = user;
   }
 
   next();

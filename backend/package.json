@@ -7,8 +7,8 @@
     "start": "ts-node src/main.ts",
     "dev": "nodemon src/main.ts",
     "debug": "nodemon --inspect=0.0.0.0:9227 src/main.ts",
-    "build:prod": "rm -rf ./dist && tsc --build",
-    "start:prod": "node ./dist/backend/src/main.js"
+    "build:prod": "tsc --build",
+    "start:prod": "node --require ts-node/register -r tsconfig-paths/register src/main.ts"
   },
   "author": "Patrick Tluszcz <patricktluszcz@gmail.com>",
   "license": "ISC",

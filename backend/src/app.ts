@@ -52,11 +52,8 @@ export class SvitlaServer {
 
   registerMiddlewares() {
     const users = this.db.table<User>("users");
-    const channels = this.db.table<Channel>("channels");
-
-    this.ws.io.use(cookieParserSocket());
-    this.ws.io.use(authenticatedSocket(users));
-    this.ws.io.use(channelExists(channels));
+    const middlewares = [cookieParserSocket(), authenticatedSocket(users)];
+    this.ws.registerMiddlewares(middlewares);
   }
 
   async lifecycleOnModuleInit() {

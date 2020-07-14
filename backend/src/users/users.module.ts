@@ -30,12 +30,13 @@ export class UsersModule {
 
   emitAllUsers = () => {
     const allUsers = this.users.getAll();
-    console.log();
     this.ws.io.sockets.emit(Event.USERS, allUsers);
   };
 
   disconnected = (socket: AuthenticatedSocket) => {
     const user = socket.user;
+
+    socket.user = null;
 
     if (user) {
       this.users.update(user.id, {
@@ -77,24 +78,26 @@ export class UsersModule {
 
     try {
       this.users.create(user.id, user);
+
       socket.emit(Event.ADD_USER, { success: true, user });
       this.emitAllUsers();
     } catch (e) {
-      socket.join(username).emit(Event.ADD_USER, {
+      socket.emit(Event.ADD_USER, {
         error: true,
         code: HttpStatusCodes.INTERNAL_SERVER_ERROR,
       });
     }
   };
 
-  editUser = (socket: AuthenticatedSocket, { username }) => {
-    const user = socket.user;
-    const updated = this.users.update(user.id, {
+  editUser = (socket: AuthenticatedSocket, { username, user }) => {
+    const updated = {
       ...user,
       isOnline: true,
       username,
-    });
-    socket.emit(Event.EDIT_USER, { user: updated });
+    };
+
+    this.users.update(user.id, updated);
+    socket.emit(Event.EDIT_USER, updated);
     this.emitAllUsers();
   };
 }

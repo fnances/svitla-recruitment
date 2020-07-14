@@ -23,12 +23,9 @@ export class DirectModule {
   }
 
   connected = (socket: Socket, id: string) => {
-    console.log("connected");
     const directs = this.directs.get(id);
-
     socket.emit("DIRECTS", directs);
   };
 
   sendMessage() {}
-  joinDirect() {}
 }
