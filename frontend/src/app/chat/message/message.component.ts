@@ -27,7 +27,6 @@ export class MessageComponent implements OnInit {
           if (!channel) {
             return;
           }
-
           this.messages = channel.messages;
         });
     });

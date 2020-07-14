@@ -1,14 +1,15 @@
 <div *ngFor="let message of messages">
-  <div class="message border-bottom" *ngIf="message.body">
+  <div *ngIf="message.system" class="special-message border">
+    {{ message.body }} by {{ message.username }} at
+    {{ message.createdAt | date: "short" }}
+  </div>
+
+  <div class="message border-bottom" *ngIf="!message.system">
     <small>
       {{ message.createdAt | date: "short" }}
     </small>
 
     <small class="text-medondo"> {{ message.username }} </small>
     <quill-view-html [content]="message.body" theme="snow"></quill-view-html>
-  </div>
-
-  <div *ngIf="!message.body" class="special-message border">
-    {{ message }}
   </div>
 </div>

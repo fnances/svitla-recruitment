@@ -27,15 +27,26 @@
 }
 
 .sidebar-categories__container {
-  height: 50%;
   display: flex;
-  justify-content: center;
   flex-direction: column;
 }
 
-.list {
+.hide-scroll {
   flex: 1;
-  max-height: 370px;
+  overflow: hidden;
+  max-height: 250px;
+
+  .channels {
+    flex: 2;
+    max-height: 300px;
+  }
+}
+
+.list {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
   padding-top: 20px;
   padding-left: 20px;
+  box-sizing: content-box;
 }

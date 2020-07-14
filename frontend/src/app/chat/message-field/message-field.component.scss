@@ -3,7 +3,6 @@
 .message {
   display: flex;
   border-top: 2px solid $cool_gray;
-  // padding-top: 5px;
   position: relative;
 }
 
@@ -11,9 +10,6 @@
   position: absolute;
   bottom: 0px;
   right: 110px;
-  // left: 10px;
-  // display: block;
-  // width: 100%;
   text-align: right;
 }
 
@@ -23,7 +19,6 @@
 }
 
 .send-btn {
-  // padding-top: 10px;
   width: 100px;
   display: flex;
   flex-direction: column;

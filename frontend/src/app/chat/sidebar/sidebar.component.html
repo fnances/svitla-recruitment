@@ -12,23 +12,25 @@
       <app-inline-input icon="search" [suggestions]="users"> </app-inline-input>
     </div>
 
-    <div class="list w-full mt-3">
-      <p
-        *ngFor="let user of users"
-        class="p-3 hover-gray"
-        (click)="selectUser(user)"
-      >
-        <mat-icon
-          [style.fontSize.px]="10"
-          [ngClass]="{
-            online: user.isOnline,
-            offline: !user.isOnline
-          }"
+    <div class="hide-scroll">
+      <div class="list">
+        <p
+          *ngFor="let user of users"
+          class="p-3 hover-gray"
+          (click)="selectUser(user)"
         >
-          circle
-        </mat-icon>
-        {{ user.username }}
-      </p>
+          <mat-icon
+            [style.fontSize.px]="10"
+            [ngClass]="{
+              online: user.isOnline,
+              offline: !user.isOnline
+            }"
+          >
+            circle
+          </mat-icon>
+          {{ user.username }}
+        </p>
+      </div>
     </div>
 
     <div
@@ -42,23 +44,25 @@
       </app-inline-input>
     </div>
 
-    <div class="list w-full">
-      <p
-        *ngFor="let channel of channels"
-        class="p-5 hover-gray mt-5"
-        (click)="selectChannel(channel)"
-      >
-        <span
-          [matBadge]="channel.messages.length"
-          matBadgeOverlap="false"
-          matBadgeColor="warn"
+    <div class="hide-scroll">
+      <div class="list w-full">
+        <p
+          *ngFor="let channel of channels"
+          class="p-5 hover-gray mt-5"
+          (click)="selectChannel(channel)"
         >
-          <span class="text-medondo">
-            #
+          <span
+            [matBadge]="channel.messages.length"
+            matBadgeOverlap="false"
+            matBadgeColor="warn"
+          >
+            <span class="text-medondo">
+              #
+            </span>
+            {{ channel.name }}
           </span>
-          {{ channel.name }}
-        </span>
-      </p>
+        </p>
+      </div>
     </div>
 
     <div
@@ -75,13 +79,18 @@
       >
       </app-inline-input>
     </div>
-
-    <div class="list w-full">
-      <p *ngFor="let direct of directs" class="p-3">
-        <span matBadge="37" matBadgeOverlap="false" matBadgeColor="warn">
-          {{ direct.name }}
-        </span>
-      </p>
+    <div class="hide-scroll">
+      <div class="list channels w-full">
+        <p *ngFor="let direct of directs" class="p-3">
+          <span matBadge="37" matBadgeOverlap="false" matBadgeColor="warn">
+            {{ direct.name }}
+          </span>
+        </p>
+      </div>
     </div>
   </div>
+
+  <p class="text-medondo p-1">
+    Select or create a channel to send a message
+  </p>
 </aside>

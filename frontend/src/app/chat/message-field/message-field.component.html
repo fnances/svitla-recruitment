@@ -19,7 +19,7 @@
     class="send-btn"
     color="primary"
     (click)="send()"
-    [disabled]="message.invalid"
+    [disabled]="message.invalid || disabled"
   >
     Send
     <hr />

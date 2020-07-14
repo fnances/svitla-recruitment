@@ -9,6 +9,9 @@ import {
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
+import 'quill-emoji';
+import 'quill-mention';
+
 import { User } from '@shared-interfaces';
 
 @Component({
@@ -20,6 +23,8 @@ export class MessageFieldComponent implements OnInit, OnChanges {
   @Output() sendMessage = new EventEmitter();
   @Input() mention: User;
   @Input() to = '';
+
+  @Input() disabled: boolean;
 
   editor = null;
 
@@ -59,7 +64,7 @@ export class MessageFieldComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.mention) {
+    if (changes.mention && changes.mention.currentValue) {
       const user = changes.mention.currentValue;
 
       this.message.setValue(`${this.message.value || ''} @${user.username}`);
