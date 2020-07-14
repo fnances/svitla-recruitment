@@ -1,9 +1,9 @@
 <h1 mat-dialog-title>Name yourself</h1>
 <div>
   <div mat-dialog-content class="flex">
-    <mat-form-field>
+    <mat-form-field (keyup.enter)="submit()">
       <mat-label>Name</mat-label>
-      <input matInput [formControl]="username" />
+      <input name="username" matInput [formControl]="username" />
     </mat-form-field>
 
     <p *ngIf="username.hasError('taken')">

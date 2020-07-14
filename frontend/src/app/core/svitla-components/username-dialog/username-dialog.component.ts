@@ -34,12 +34,21 @@ export class UsernameDialogComponent implements OnInit {
     ]);
   }
 
+  submit() {
+    if (this.data.user) {
+      this.edit();
+    } else {
+      this.confirm();
+    }
+  }
+
   edit() {
     const { username } = this;
 
     if (username.valid) {
       this.userService.editUser(username.value).subscribe(updatedUser => {
         this.userService.saveUser(updatedUser);
+        this.dialogRef.close();
       });
     }
   }
