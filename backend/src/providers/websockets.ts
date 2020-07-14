@@ -1,4 +1,4 @@
-import { Server } from "http";
+import { Server } from "https";
 import socketIo, { Socket } from "socket.io";
 import { AuthenticatedSocket } from "../middlewares/socket-auth.middleware";
 import { Event } from "@shared-interfaces";

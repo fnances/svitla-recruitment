@@ -1,6 +1,9 @@
-import express from "express";
 import socketIo from "socket.io";
-import { createServer, Server } from "http";
+
+import { resolve } from "path";
+import { readFileSync } from "fs";
+
+import { createServer, Server } from "https";
 
 import { UsersModule } from "./users/users.module";
 import { ChannelModule } from "./channel/channel.module";
@@ -15,9 +18,8 @@ import {
 
 import { cookieParserSocket } from "./middlewares/socket-cookie-parser";
 import { authenticatedSocket } from "./middlewares/socket-auth.middleware";
-import { channelExists } from "./middlewares/channel-exists";
 
-import { User, Channel } from "@shared-interfaces";
+import { User } from "@shared-interfaces";
 
 export type Module =
   | typeof ChannelModule
@@ -35,13 +37,17 @@ export class SvitlaServer {
   server: Server;
   modules = [];
 
+  opts = {
+    key: readFileSync(resolve(__dirname, "../ssl/file.pem")),
+    cert: readFileSync(resolve(__dirname, "../ssl/file.crt")),
+  };
+
   constructor() {
     this.createApp();
   }
 
   createApp() {
-    this.app = express();
-    this.server = createServer(this.app);
+    this.server = createServer(this.opts);
     this.ws = createWebsocketsFactory(this.server);
     this.db = createFakeDatabaseProviderFactory();
   }
