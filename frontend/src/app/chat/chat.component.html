@@ -12,6 +12,7 @@
       class="message-field"
       [mention]="mention$ | async"
       (sendMessage)="sendMessage($event)"
+      [disabled]="!channel"
     >
     </app-message-field>
   </div>

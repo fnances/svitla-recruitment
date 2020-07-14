@@ -34,14 +34,14 @@ export class AppComponent implements OnInit, OnDestroy {
       this.openModal();
     });
 
-    this.userService.auth$().subscribe(auth => {
-      if (auth.code === HttpStatusCodes.UNAUTHORIZED) {
+    this.userService.auth$().subscribe(({ code, user }) => {
+      if (code === HttpStatusCodes.UNAUTHORIZED) {
         this.userService.simpleLogOut();
       }
-    });
 
-    this.channelService.channel.subscribe(channel => {
-      console.log(channel);
+      if (user) {
+        this.userService.saveUser(user);
+      }
     });
   }
 

@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of } from 'rxjs';
+import { tap, flatMap, map } from 'rxjs/operators';
 
 import { SocketService } from '../sockets/socket.service';
 
 import { User, Event } from 'shared-interfaces/lib';
+
+export interface SimpleLogInPayload {
+  success?: boolean;
+  error?: boolean;
+  code?: number;
+  user?: User;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +27,10 @@ export class UserService {
 
   constructor(private socketService: SocketService) {
     const authenticated = this.getUser();
-
     if (authenticated) {
       this.saveUser(authenticated);
-      this._user$.next(authenticated);
+    } else if (authenticated === undefined) {
+      this.clearUser();
     }
 
     this.loadUsers();
@@ -39,36 +46,37 @@ export class UserService {
     this._mentioned$.next(user);
   }
 
-  resetMention(user: User) {
+  resetMention() {
     this._mentioned$.next(null);
   }
 
-  simpleLogIn(username: string): Observable<any> {
+  simpleLogIn(username: string): Observable<SimpleLogInPayload> {
     this.socketService.emit(Event.ADD_USER, username);
-    return this.socketService.fromEvent(Event.ADD_USER).pipe(
-      tap(payload => {
-        if (payload.success) {
-          this.saveUser(payload.user);
-          this._user$.next(payload.user);
-        }
+    return this.socketService
+      .fromEvent<SimpleLogInPayload>(Event.ADD_USER)
+      .pipe(
+        tap(payload => {
+          if (payload.success) {
+            this.saveUser(payload.user);
+          }
 
-        if (payload.code === 404) {
-          this.clearUser();
-          this._user$.next(null);
-        }
-      })
-    );
+          if (payload.code === 404) {
+            this.clearUser();
+          }
+        })
+      );
   }
 
   simpleLogOut() {
     this.clearUser();
     this._user$.next(null);
+    this.socketService.emit(Event.DISCONNECTED);
   }
 
-  editUser(id: string, username: string): Observable<User> {
+  editUser(username: string): Observable<User> {
     return this.socketService.requestResponse(Event.EDIT_USER, {
-      id,
-      username
+      username,
+      user: this._user$.value
     });
   }
 
@@ -80,15 +88,19 @@ export class UserService {
     const parsed = JSON.stringify(user);
     localStorage.setItem('AUTH', parsed);
     document.cookie = `user=${parsed}; path=/;`;
+    this._user$.next(user);
   }
 
   clearUser() {
     localStorage.removeItem('AUTH');
-    document.cookie = null;
+    document.cookie = `user=; path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+    this._user$.next(null);
   }
 
   auth$() {
-    return this.socketService.fromEvent<{ code: number }>(Event.AUTH);
+    return this.socketService.fromEvent<{ code?: number; user?: User }>(
+      Event.AUTH
+    );
   }
 
   users$(): Observable<User[]> {

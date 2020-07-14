@@ -38,11 +38,9 @@ export class UsernameDialogComponent implements OnInit {
     const { username } = this;
 
     if (username.valid) {
-      this.userService
-        .editUser(this.user.id, username.value)
-        .subscribe(response => {
-          debugger;
-        });
+      this.userService.editUser(username.value).subscribe(updatedUser => {
+        this.userService.saveUser(updatedUser);
+      });
     }
   }
 

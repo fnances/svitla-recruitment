@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { Event, Channel } from '@shared-interfaces';
+import { Event, Channel, User } from '@shared-interfaces';
 import { SocketService } from '../../core/sockets/socket.service';
 import { UserService } from '../../core/user/user.service';
 
@@ -16,11 +16,16 @@ export class ChannelService {
   public readonly allChannels = this._allChannels.asObservable();
   public readonly channel = this._channel.asObservable();
 
+  user: User;
+
   constructor(
     private socketService: SocketService,
     private userService: UserService
   ) {
     this.loadChannels();
+    this.userService.user.subscribe(user => {
+      this.user = user;
+    });
   }
 
   loadChannels() {
@@ -36,7 +41,10 @@ export class ChannelService {
   }
 
   addChannel(channelName: string) {
-    this.socketService.emit(Event.ADD_CHANNEL, { channelName });
+    this.socketService.emit(Event.ADD_CHANNEL, {
+      channelName,
+      user: this.user
+    });
   }
 
   joinChannel(channel: string) {
@@ -44,7 +52,11 @@ export class ChannelService {
   }
 
   sendTo(channel: string, message: string) {
-    this.socketService.emit(Event.SEND_MESSAGE, { channel, message });
+    this.socketService.emit(Event.SEND_MESSAGE, {
+      channel,
+      message,
+      user: this.user
+    });
   }
 
   channels$() {
