@@ -8,7 +8,46 @@
       "name": "Node: Nodemon",
       "processId": "${command:PickProcess}",
       "restart": true,
-      "protocol": "inspector"
-    }
+     "protocol": "inspector",
+    //  "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Node: Attach",
+      "smartStep": true,
+      "port": 9227,
+      "restart": true,
+      "sourceMaps": true,
+      "stopOnEntry": true,
+      "protocol": "inspector",
+      "internalConsoleOptions": "openOnSessionStart"
+    },
+    {
+      "name": "Debug API",
+      "type": "node",
+      "restart": true,
+      "sourceMaps": true,
+      "stopOnEntry": true,
+      "request": "launch",
+      "protocol": "inspector",
+//    "runtimeExecutable": "nodemon", 
+      "console": "integratedTerminal",
+      "cwd": "${workspaceRoot}/backend"
+    },
+    {
+        
+        "type": "node",
+        "request": "launch",
+        "name": "Launch via NPM",
+        "runtimeExecutable": "yarn",
+        "runtimeArgs": [
+            "debug"
+        ],
+        "port": 9227,
+        "console": "integratedTerminal",
+        "cwd": "${workspaceFolder}/backend"
+    },
+
   ]
 }
