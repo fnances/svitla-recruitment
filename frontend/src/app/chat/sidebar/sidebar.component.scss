@@ -32,12 +32,9 @@
 }
 
 .hide-scroll {
-  flex: 1;
+  flex: 150px;
   overflow: hidden;
-  max-height: 250px;
-
   .channels {
-    flex: 2;
     max-height: 300px;
   }
 }
