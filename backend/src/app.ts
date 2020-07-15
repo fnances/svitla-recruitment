@@ -43,6 +43,7 @@ export class SvitlaServer {
   }
 
   createServerOptions() {
+    console.log("NODE_CERT ENV:", process.env.NODE_CERT);
     return process.env.NODE_CERT
       ? {
           key: readFileSync(
@@ -55,8 +56,7 @@ export class SvitlaServer {
             resolve("etc/letsencrypt/www.mybtcbook.com/cert.pem", "utf8")
           ),
           ca: readFileSync(
-            resolve("etc/letsencrypt/www.mybtcbook.com/chain.pem", "utf8"),
-            "utf8"
+            resolve("etc/letsencrypt/www.mybtcbook.com/chain.pem", "utf8")
           ),
         }
       : {};
@@ -76,10 +76,16 @@ export class SvitlaServer {
   registerMiddlewares() {
     const users = this.db.table<User>("users");
     const middlewares = [cookieParserSocket(), authenticatedSocket(users)];
+    const publicDir = resolve(__dirname, "..", "public");
+
+    console.log("Public directory path:", publicDir);
+
+    // @ts-ignore
+    this.app.use(express.static(publicDir));
 
     // @ts-ignore
     this.app.use(
-      join(__dirname, "public", "./.well-known"),
+      join(publicDir, ".well-known"),
       express.static(".well-known"),
       serveIndex(".well-known")
     );
