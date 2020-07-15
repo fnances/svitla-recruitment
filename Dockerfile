@@ -13,6 +13,9 @@ RUN npm install
 
 COPY ./backend . 
 
+# ADD ./backend/ssl/server_cert.pem /usr/local/share/ca-certificates/foo.crt 
+# RUN chmod 644 /usr/local/share/ca-certificates/foo.crt && update-ca-certificates 
+
 EXPOSE 3000
 CMD ["npm", "run", "start:prod"]
 

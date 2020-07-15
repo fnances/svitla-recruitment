@@ -36,13 +36,13 @@ export class UsersModule {
   disconnected = (socket: AuthenticatedSocket) => {
     const user = socket.user;
 
-    socket.user = null;
-
     if (user) {
       this.users.update(user.id, {
         ...user,
         isOnline: false,
       });
+
+      socket.user = null;
     }
 
     this.emitAllUsers();
