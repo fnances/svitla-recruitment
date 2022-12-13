@@ -24,7 +24,7 @@
     "typescript": "^3.9.6"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "serve-index": "^1.9.1",
     "socket.io": "^2.3.0",
     "uuid": "^8.2.0"
